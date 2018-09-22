@@ -1,0 +1,22 @@
+class Program{
+    int a[100];
+  	void main()
+    {
+    		int i;
+        i=0;
+    		for i=0,100
+        {
+    			a[i] = i;
+    		}
+        int search_element;
+        search_element = 34;
+        for i=0,100
+        {
+          if ( a[i] == search_element)
+          {
+      		  callout("printf","search_element %d found at index %d\n",search_element,i);
+            break;
+          }
+  	    }
+    }
+}

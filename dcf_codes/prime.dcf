@@ -1,0 +1,23 @@
+class Program
+{
+	void main()
+	{
+		int n;
+		n=71;
+		int y;
+		y = n / 2;
+		int flag;
+		for i=2, y
+		{
+			if( n % i == 0)
+			{
+					callout("printf","Given number which is %d is a composite number\n",n);
+					flag = 1;
+			}
+		}
+		if ( flag == 0)
+		{
+			callout("printf","Given number which is %d is a prime number\n",n);
+		}
+	}
+}
