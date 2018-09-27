@@ -3,10 +3,10 @@ class Program
 	void main()
 	{
 		int n;
-		n=71;
 		int y;
-		y = n / 2;
 		int flag;
+		n=71;
+		y = n / 2;
 		for i=2, y
 		{
 			if( n % i == 0)
