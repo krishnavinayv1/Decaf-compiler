@@ -9,12 +9,11 @@ alpha [0-9a-zA-Z]
 delim [ \t]+
 char [ -~]
 character   \'{char}\'
-hex_digit {digit}|[a-fA-F]
 
 
 %%
 "TRUE"|"FALSE"              {yylval.stringType = strdup(yytext);return BOOL_LITERAL;}
-0[xX][0-9a-fA-F]+		 	{yylval.stringType = strdup(yytext);return HEX_LITERAL; }
+0[xX][0-9a-fA-F]+		 	{yylval.stringType = strdup(yytext);return HEX_LITERAL 	; }
 "+" 						{ return ADD; }
 "-" 						{ return SUB; }
 "/" 						{ return DIV; }

@@ -49,9 +49,9 @@ arith_op : ADD {printf("Add ");} | SUB {printf("sub ");} | MUL {printf("mul ");}
 
 rel_op : LT {printf("less than ");} | GT {printf("greater than ");} | GE {printf("great equal ");} | LE {printf("less equal ");};
 
-eq_op : EQQ | NQQ;
+eq_op : EQQ {printf("EQUAL TO(==) ");} | NQQ;
 
-cond_op : AND | OR;
+cond_op : AND {printf("AND ");}| OR {printf("OR ");};
 
 literal : int_literal {printf("int literal ");} | CHAR_LITERAL | BOOL_LITERAL;
 
