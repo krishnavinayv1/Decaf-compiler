@@ -14,7 +14,7 @@ extern char* yytext;
 %token <stringType> CHAR_LITERAL
 %token <stringType> DECIMAL_LITERAL
 %token <stringType> BOOL_LITERAL
-%token <stringType> HEX_DIGIT
+%token <stringType> HEX_LITERAL
 %token EQQ NQQ
 %token AND OR
 %token LT GT LE GE
@@ -55,7 +55,7 @@ cond_op : AND | OR;
 
 literal : int_literal {printf("int literal ");} | CHAR_LITERAL | BOOL_LITERAL;
 
-int_literal : DECIMAL_LITERAL | HEX_DIGIT;
+int_literal : DECIMAL_LITERAL | HEX_LITERAL;
 
 
 %%
