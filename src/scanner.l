@@ -52,7 +52,7 @@ string (\\n|\\t|\\'|\\\\|\\\"|[^\\"'])
 "{" 						{return CB;}
 "}" 						{return OB;}
 [0-9][0-9]* 				{yylval.stringType = strdup(yytext);return DECIMAL_LITERAL;}
-[0-9a-zA-Z][a-zA-Z0-9]*		{yylval.stringType = strdup(yytext);return ID;}
+[0-9a-zA-Z_][a-zA-Z0-9_]*		{yylval.stringType = strdup(yytext);return ID;}
 {character} 				{yylval.stringType = strdup(yytext);return CHAR_LITERAL; }
 \"{string}*\" 				{ return STRING; }
 [ \t]				{ }

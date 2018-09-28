@@ -1,14 +1,14 @@
 class Program{
     int a[100];
-  	void main()
+    void main()
     {
-    		int i;
-        i=0;
-    		for i=0,100
-        {
-    			a[i] = i;
-    		}
+    	int i;
         int search_element;
+        i=0;
+    	for i=0,100
+        {
+    	    a[i] = i;
+    	}
         search_element = 34;
         for i=0,100
         {
@@ -17,6 +17,6 @@ class Program{
       		  callout("printf","search_element %d found at index %d\n",search_element,i);
             break;
           }
-  	    }
+  	}
     }
 }

@@ -39,45 +39,50 @@ extern char* yytext;
 %%
 
 prom : CLASS PROGRAM CB field_declarations method_declarations OB;
+	 | CLASS PROGRAM CB OB;
+	 | CLASS PROGRAM CB method_declarations OB;
+	 | CLASS PROGRAM CB field_declarations  OB;
 
-field_declarations : | field_declarations field_declaration SC {printf("field_declarations done\n");};
+field_declarations : field_declaration SC | field_declarations field_declaration SC {printf("field_declarations done\n");};
 				   
 field_declaration  : TYPE variables;
 
 variables 		   : variable | variables COMMA variable;
 
-variable           : ID | ID CS int_literal OS;
+variable           : ID | ID CS int_literal OS { printf("dsff\n");};
 
-method_declarations : | method_declarations method_declaration;
+method_declarations : method_declaration | method_declarations method_declaration;
 
 method_declaration  : TYPE ID args block | VOID ID args block;
 
-args               : CL OL | CL TYPE ID	arg OL;
+args               : CL OL | CL TYPE ID OL | CL TYPE ID arg OL;
 
-arg                : | COMMA TYPE ID arg;
+arg                : COMMA TYPE ID | COMMA TYPE ID arg;
 
 block              : CB var_declarations statements OB;
+				   | CB statements OB;
+				   | CB var_declarations OB;
 
-var_declarations   : | var_declaration SC var_declarations;
+var_declarations   : var_declaration SC | var_declaration SC var_declarations;
 
-var_declaration    : TYPE ID var_names;
+var_declaration    : TYPE location | TYPE location var_names;
 
-var_names          : | COMMA ID var_names;
+var_names          : COMMA location | COMMA location var_names;
 
-statements         : | statements statement;
+statements         : statement | statements statement;
 
 statement: assignment
 		 | function_call SC
 		 | IF CL expr OL block
 		 | IF CL expr OL block ELSE block  
-		 | FOR ID EQ expr COMMA expr block 
+		 | { printf("For loop starting\n");} FOR identifier EQ expr COMMA expr block 
 		 | RETURN SC 
 		 | RETURN expr SC 
 		 | BREAK SC 
 		 | CONTINUE SC 
 		 | block;
 
-assignment: location EQ expr SC {printf("EQUALS Expression done\n");} 
+assignment: location EQ {printf("EQUALS \n");} expr SC  
 		  | location PLUSONE expr SC 
 	      | location SUBONE expr SC;
 
@@ -88,7 +93,9 @@ function_call: ID CL pars OL
 pars         : expr 
 			 | pars COMMA expr;
 
-location : ID {printf("location:%s ",$1);}
+identifier   : ID {printf("location:%s\n ",$1);}
+
+location : ID {printf("location:%s\n ",$1);}
 		 | ID CS expr OS;
 
 callout_args: | callout_args COMMA callout_arg;
@@ -109,14 +116,14 @@ expr : CL expr OL
 	 |  expr GT expr
 	 |  expr LT expr
 	 |  expr MOD expr
-	 |  expr DIV expr { printf("division done\n");}
+	 |  NOT expr
+	 |  expr DIV expr 
 	 |  expr MUL expr
 	 |  expr ADD expr
-	 //|  SUB expr
-	 |  NOT expr
+	 |  SUB {printf("sub expression \n");} expr 
 	 ;
 
-literal : int_literal {printf("int literal ");} | CHAR_LITERAL | BOOL_LITERAL;
+literal : int_literal {printf("int literal \n");} | CHAR_LITERAL | BOOL_LITERAL;
 
 int_literal : DECIMAL_LITERAL | HEX_LITERAL;
 
