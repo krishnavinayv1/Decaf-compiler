@@ -62,14 +62,17 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "parser.y" /* yacc.c:339  */
+#line 1 "parser.ypp" /* yacc.c:339  */
 
-#include <stdio.h>
-#include <string.h>
-extern FILE *yyin;
-extern char* yytext;
+#include <bits/stdc++.h>
+ extern "C" int yylex();
+  extern int yyparse();
+  extern FILE *yyin;
+  extern int line_num;
+  extern int errors;
+   void yyerror(const char *s);
 
-#line 73 "parser.tab.c" /* yacc.c:339  */
+#line 76 "parser.tab.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -88,9 +91,9 @@ extern char* yytext;
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "parser.tab.h".  */
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+   by #include "parser.tab.hpp".  */
+#ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
+# define YY_YY_PARSER_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -154,11 +157,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 9 "parser.y" /* yacc.c:355  */
+#line 12 "parser.ypp" /* yacc.c:355  */
 
 	char* stringType;
 
-#line 162 "parser.tab.c" /* yacc.c:355  */
+#line 165 "parser.tab.cpp" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -171,11 +174,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_TAB_HPP_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 179 "parser.tab.c" /* yacc.c:358  */
+#line 182 "parser.tab.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -476,15 +479,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    41,    41,    42,    43,    44,    46,    46,    48,    50,
-      50,    52,    52,    54,    54,    56,    56,    58,    58,    58,
-      60,    60,    62,    63,    64,    66,    66,    68,    68,    70,
-      70,    72,    72,    74,    75,    76,    77,    78,    78,    79,
-      80,    81,    82,    83,    85,    85,    86,    87,    90,    91,
-      93,    94,    96,    98,    99,   101,   101,   103,   104,   106,
-     107,   108,   109,   110,   111,   112,   113,   114,   115,   116,
-     117,   118,   119,   120,   121,   122,   123,   123,   126,   126,
-     126,   128,   128
+       0,    44,    44,    45,    46,    47,    49,    49,    51,    53,
+      53,    55,    55,    57,    57,    59,    59,    61,    61,    61,
+      63,    63,    65,    66,    67,    69,    69,    71,    71,    73,
+      73,    75,    75,    77,    78,    79,    80,    81,    81,    82,
+      83,    84,    85,    86,    88,    88,    89,    90,    93,    94,
+      96,    97,    99,   101,   102,   104,   104,   106,   107,   109,
+     110,   111,   112,   113,   114,   115,   116,   117,   118,   119,
+     120,   121,   122,   123,   124,   125,   126,   126,   129,   129,
+     129,   131,   131
 };
 #endif
 
@@ -1404,55 +1407,55 @@ yyreduce:
   switch (yyn)
     {
         case 7:
-#line 46 "parser.y" /* yacc.c:1646  */
+#line 49 "parser.ypp" /* yacc.c:1646  */
     {printf("field_declarations done\n");}
-#line 1410 "parser.tab.c" /* yacc.c:1646  */
+#line 1413 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 52 "parser.y" /* yacc.c:1646  */
+#line 55 "parser.ypp" /* yacc.c:1646  */
     { printf("dsff\n");}
-#line 1416 "parser.tab.c" /* yacc.c:1646  */
+#line 1419 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 78 "parser.y" /* yacc.c:1646  */
+#line 81 "parser.ypp" /* yacc.c:1646  */
     { printf("For loop starting\n");}
-#line 1422 "parser.tab.c" /* yacc.c:1646  */
+#line 1425 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 85 "parser.y" /* yacc.c:1646  */
+#line 88 "parser.ypp" /* yacc.c:1646  */
     {printf("EQUALS \n");}
-#line 1428 "parser.tab.c" /* yacc.c:1646  */
+#line 1431 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 96 "parser.y" /* yacc.c:1646  */
+#line 99 "parser.ypp" /* yacc.c:1646  */
     {printf("location:%s\n ",(yyvsp[0].stringType));}
-#line 1434 "parser.tab.c" /* yacc.c:1646  */
+#line 1437 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 98 "parser.y" /* yacc.c:1646  */
+#line 101 "parser.ypp" /* yacc.c:1646  */
     {printf("location:%s\n ",(yyvsp[0].stringType));}
-#line 1440 "parser.tab.c" /* yacc.c:1646  */
+#line 1443 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 123 "parser.y" /* yacc.c:1646  */
+#line 126 "parser.ypp" /* yacc.c:1646  */
     {printf("sub expression \n");}
-#line 1446 "parser.tab.c" /* yacc.c:1646  */
+#line 1449 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 126 "parser.y" /* yacc.c:1646  */
+#line 129 "parser.ypp" /* yacc.c:1646  */
     {printf("int literal \n");}
-#line 1452 "parser.tab.c" /* yacc.c:1646  */
+#line 1455 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1456 "parser.tab.c" /* yacc.c:1646  */
+#line 1459 "parser.tab.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1680,7 +1683,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 131 "parser.y" /* yacc.c:1906  */
+#line 134 "parser.ypp" /* yacc.c:1906  */
 
 
 main(int argc, char **argv)
@@ -1696,7 +1699,7 @@ main(int argc, char **argv)
 	printf("THE END\n");
 }
 
-yyerror(char *s)
+void yyerror(const char *s)
 {
 	fprintf(stderr, "error: %s\n", s);
 }

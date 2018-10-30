@@ -1,8 +1,11 @@
 %{
-#include <stdio.h>
-#include <string.h>
-extern FILE *yyin;
-extern char* yytext;
+#include <bits/stdc++.h>
+ extern "C" int yylex();
+  extern int yyparse();
+  extern FILE *yyin;
+  extern int line_num;
+  extern int errors;
+   void yyerror(const char *s);
 %}
 
 %union
@@ -143,7 +146,7 @@ main(int argc, char **argv)
 	printf("THE END\n");
 }
 
-yyerror(char *s)
+void yyerror(const char *s)
 {
 	fprintf(stderr, "error: %s\n", s);
 }

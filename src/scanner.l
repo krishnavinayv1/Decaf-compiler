@@ -1,5 +1,8 @@
 %{
-#include "parser.tab.h"
+#include "parser.tab.hpp"
+#define YY_DECL extern "C" int yylex()
+	using namespace std;
+	int line_num = 1;
 int lineno = 0;
 %}
 
