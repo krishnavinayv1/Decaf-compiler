@@ -4,4 +4,10 @@ class Program
     boolean rt;
     int a[100];
     boolean er[100],c,d[100];
+    int main(int y,int rt)
+    {
+        int a;
+        int c,d,e;
+        boolean er;
+    }
 }

@@ -103,8 +103,16 @@ union YYSTYPE
 	class field_c *field;
 	class vars_c *vars;
 	class var_c *var;
+	class meth_c *meth;
+	class meths_c *meths;
+	class args_c *ars;
+	class arg_c *ar;
+	class block_c *bl;
+	class vars_d_c *vsd;
+	class var_d_c *vd;
+	class var_names_c *vr_names;
 
-#line 108 "parser.tab.hpp" /* yacc.c:1909  */
+#line 116 "parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
