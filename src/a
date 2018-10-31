@@ -1,0 +1,7 @@
+class Program
+{
+    int a,b,c,d[100];
+    boolean rt;
+    int a[100];
+    boolean er[100],c,d[100];
+}

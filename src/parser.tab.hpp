@@ -48,15 +48,15 @@ extern int yydebug;
     CALLOUT = 258,
     STRING = 259,
     ID = 260,
-    CHAR_LITERAL = 261,
-    DECIMAL_LITERAL = 262,
+    INT_LITERAL = 261,
+    CHAR_LITERAL = 262,
     BOOL_LITERAL = 263,
-    HEX_LITERAL = 264,
-    EQQ = 265,
-    NQQ = 266,
-    EQ = 267,
-    AND = 268,
-    OR = 269,
+    EQQ = 264,
+    NQQ = 265,
+    EQ = 266,
+    AND = 267,
+    OR = 268,
+    NOT = 269,
     LT = 270,
     GT = 271,
     LE = 272,
@@ -66,27 +66,26 @@ extern int yydebug;
     MUL = 276,
     DIV = 277,
     MOD = 278,
-    NOT = 279,
-    OL = 280,
-    CL = 281,
-    OS = 282,
-    CS = 283,
-    CB = 284,
-    OB = 285,
-    CLASS = 286,
-    PROGRAM = 287,
-    TYPE = 288,
+    OL = 279,
+    CL = 280,
+    OS = 281,
+    CS = 282,
+    CB = 283,
+    OB = 284,
+    TYPE = 285,
+    VOID = 286,
+    CLASS = 287,
+    PROGRAM = 288,
     SC = 289,
     COMMA = 290,
-    VOID = 291,
-    IF = 292,
-    FOR = 293,
-    BREAK = 294,
-    CONTINUE = 295,
-    ELSE = 296,
-    RETURN = 297,
-    PLUSONE = 298,
-    SUBONE = 299
+    IF = 291,
+    FOR = 292,
+    BREAK = 293,
+    CONTINUE = 294,
+    ELSE = 295,
+    RETURN = 296,
+    PLUSONE = 297,
+    SUBONE = 298
   };
 #endif
 
@@ -95,11 +94,17 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 12 "parser.ypp" /* yacc.c:1909  */
+#line 15 "parser.ypp" /* yacc.c:1909  */
 
+	int number;
 	char* stringType;
+	class prog *start;
+	class fields_c *fields;
+	class field_c *field;
+	class vars_c *vars;
+	class var_c *var;
 
-#line 103 "parser.tab.hpp" /* yacc.c:1909  */
+#line 108 "parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

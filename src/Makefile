@@ -1,4 +1,4 @@
-parser: parser.ypp scanner.l
+parser: parser.ypp scanner.l ast.cpp
 		bison -d parser.ypp
 		flex scanner.l
-		g++ -o parser parser.tab.cpp lex.yy.c -ll
+		g++ -std=c++11 -o parser parser.tab.cpp ast.cpp lex.yy.c -ll
