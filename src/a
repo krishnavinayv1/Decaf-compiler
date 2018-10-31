@@ -10,5 +10,9 @@ class Program
         int c,d,e;
         boolean er;
         a=23;
+        if(a+2)
+        {
+            rt = 45;
+        }
     }
 }

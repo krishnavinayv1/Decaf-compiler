@@ -80,3 +80,57 @@ void pars_c::push_back(class expr_c *tie) {
 void statements_c::push_back(class statement_c *tie) {
 	stats_list.push_back(tie);
 }
+bool statement_c::check_return_bool(class expr_c *t) 
+{
+	if(t->return_type=="bool")
+		return true;
+	return false;
+}
+string expr_c::get_type(class expr_c *a,class expr_c *c,string b)
+{
+	if(((b=="<" or b=="<=") or (b==">=" or b==">"))
+	  or ((b=="+" or b=="-") or ((b=="*" or b=="%") or b=="/"))) 
+	{
+		if(a->return_type!="int" or c->return_type!="int")
+		{
+			cout<<"This binary relative or arithmetic operator has operators other than int"<<endl;
+			exit(0);
+		}
+		else
+		{
+			if((b=="<" or b=="<=") or (b==">=" or b==">"))
+			{
+				return "bool";
+			}
+			else
+			{
+				return "int";
+			}
+		}
+	}
+	else if(b=="!=" or b=="==")
+	{
+		if(a->return_type!=c->return_type)
+		{
+			cout<<"for the <eq_op> both operands have no same type"<<endl;
+			exit(0);
+		}		
+		else
+			return "bool";
+	}
+	else if(b=="&&" or b=="||")
+	{
+		if(a->return_type!="bool" or c->return_type!="bool")
+		{
+			cout<<"This binary cond operator has operators other than bool"<<endl;
+			exit(0);
+		}
+		else
+		return "bool";
+	}
+	else
+	{
+		return "bool";
+	}
+		
+}

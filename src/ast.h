@@ -208,12 +208,24 @@ public:
 	}
 	statement_c(class expr_c *a,class block_c *b)
 	{
+
+		if(check_return_bool(a)==false)
+		{
+			cout<<"Not a bool Expression for if statement"<<endl;
+			exit(0);
+		}
 		this->e_first = a;
 		this->b_first = b;
 		this->type = 3;
 	}
 	statement_c(class expr_c *a, class block_c *b,class block_c *c)
 	{
+
+		if(check_return_bool(a)==false)
+		{
+			cout<<"Not a bool Expression for if else statement"<<endl;
+			exit(0);
+		}
 		this->e_first = a;
 		this->b_first = b;
 		this->b_second = c;
@@ -245,6 +257,7 @@ public:
 		this->b_first = a;
 		this->type = 10;
 	}
+	bool check_return_bool(class expr_c *e);
 	virtual int accept(visitor *v){v->visit(this);}
 };
 class assignment_c: public AST{
@@ -335,9 +348,19 @@ public:
 	}
 	virtual int accept(visitor *v){v->visit(this);}
 };
+class literal_c: public AST{
+public:
+	int a;bool b;char c;
+	int flag;
+	literal_c(int a){this->a = a;this->flag=1;}
+	literal_c(bool b){this->b =b;this->flag=2;}
+	literal_c(char c){this->c =c;this->flag=3;}
+	virtual int accept(visitor *v){v->visit(this);}
+};
 class expr_c: public AST{
 public:
 	int type=0;
+	string return_type;
 	string operato;
 	class expr_c *first=NULL;
 	class expr_c *second=NULL;
@@ -349,6 +372,7 @@ public:
 		this->second = c;
 		this->operato = b;
 		this->type = 2;
+		this->return_type = get_type(this->first,this->second,b);
 	}
 	expr_c(string b,class expr_c *c)
 	{
@@ -356,31 +380,38 @@ public:
 		this->second = NULL;
 		this->operato = b;
 		this->type = 1;
+		if(b=="!")
+		{
+			if(c->return_type!="bool")
+			{
+				cout<<"For not expr operand is not bool"<<endl;
+				exit(0);
+			}
+			this->return_type = "bool";
+		}
+		if(b=="-")
+		this->return_type = c->return_type;
 	}
 	expr_c(class location_c *a)
 	{
 		this->loc = a;
 		this->type = 0;
+		this->return_type = "int";
 	}
 	expr_c(class literal_c *a)
 	{
 		this->lit = a;
 		this->type = 4;
+		if(a->flag==1)this->return_type="int";
+		if(a->flag==2)this->return_type="bool";
 	}
 	expr_c(class expr_c *a)
 	{
 		this->first = a;
+		this->return_type = a->return_type;
 		this->type = 3;
 	}
-	virtual int accept(visitor *v){v->visit(this);}
-};
-class literal_c: public AST{
-public:
-	int a;bool b;char c;
-	int flag;
-	literal_c(int a){this->a = a;this->flag=1;}
-	literal_c(bool b){this->b =b;this->flag=2;}
-	literal_c(char c){this->c =c;this->flag=3;}
+	string get_type(class expr_c *,class expr_c *,string);
 	virtual int accept(visitor *v){v->visit(this);}
 };
 
@@ -454,7 +485,7 @@ class dfs: public visitor
 	}
 	virtual int visit(block_c *v)
 	{
-		cout<<"Starting the main block"<<endl;
+		cout<<"Starting the block"<<endl;
 		if(v->total_vars)
 			v->total_vars->accept(this);
 		if(v->total_st)
@@ -485,7 +516,29 @@ class dfs: public visitor
 		cout<<"Statement: "<<endl;
 		if(val->type==1)
 		{
+			cout<<"ass"<<endl;
 			val->ass->accept(this);
+		}
+		if(val->type==3)
+		{
+			cout<<"IF"<<endl;
+			val->e_first->accept(this);
+			val->b_first->accept(this);
+		}
+		if(val->type==4)
+		{
+			cout<<"IF ELSE"<<endl;
+			val->e_first->accept(this);
+			val->b_first->accept(this);
+			val->b_second->accept(this);
+		}
+		if(val->type==5)
+		{
+			cout<<"for loop"<<endl;
+			cout<<val->a<<endl;
+			val->e_first->accept(this);
+			val->e_second->accept(this);
+			val->b_first->accept(this);
 		}
 	};
 	virtual int visit(expr_c* val)
@@ -494,9 +547,11 @@ class dfs: public visitor
 		if(val->type==2)
 		{
 			cout<<"Binary operator"<<endl;
-			cout<<"First: "<<val->first->accept(this)<<endl;
+			cout<<"First: "<<endl;
+			val->first->accept(this);
 			cout<<"Operand: "<<val->operato<<endl;
-			cout<<"second: "<<val->second->accept(this)<<endl;
+			cout<<"second: "<<endl;
+			val->second->accept(this);
 		}
 		else if(val->type==1)
 		{
@@ -519,6 +574,7 @@ class dfs: public visitor
 	};
 	virtual int visit(location_c* val)
 	{
+		cout<<"location_c: "<<endl;
 		if(val->type==1)
 		{
 			cout<<"Not an array"<<endl;
@@ -535,6 +591,7 @@ class dfs: public visitor
 	virtual int visit(function_call_c* val){};
 	virtual int visit(literal_c* val)
 	{
+		cout<<"literal_c: "<<endl;
 			if(val->flag==1)
 				cout<<val->a<<endl;
 			if(val->flag==2)
@@ -548,8 +605,8 @@ class dfs: public visitor
 	{
 		cout<<"Assignment operator"<<endl;
 		if(val->type == 1)cout<<"= operator"<<endl;
-		if(val->type == 2)cout<<"+= operator"<<endl;
-		if(val->type == 3)cout<<"-= operator"<<endl;
+		if(val->type == 3)cout<<"+= operator"<<endl;
+		if(val->type == 2)cout<<"-= operator"<<endl;
 		val->ll->accept(this);
 		val->ee->accept(this);
 	};
