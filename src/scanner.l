@@ -56,7 +56,7 @@ string (\\n|\\t|\\'|\\\\|\\\"|[^\\"'])
 "}" 						{return OB;}
 [0-9a-zA-Z_][a-zA-Z0-9_]*		{yylval.stringType = strdup(yytext);return ID;}
 {character} 				{yylval.stringType = strdup(yytext);return CHAR_LITERAL; }
-\"{string}*\" 				{ return STRING; }
+\"{string}*\" 				{ yylval.stringType = strdup(yytext); return STRING; }
 [ \t]				{ }
 \n		     		{++lineno;}
 .					{ printf("Line No %d: Unrecognized Character\n", lineno); }

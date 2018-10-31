@@ -9,5 +9,6 @@ class Program
         int a;
         int c,d,e;
         boolean er;
+        a=23;
     }
 }

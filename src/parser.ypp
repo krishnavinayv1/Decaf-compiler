@@ -28,11 +28,21 @@
 	class vars_d_c *vsd;
 	class var_d_c *vd;
 	class var_names_c *vr_names;
+	class statements_c *stats;
+	class statement_c *stat;
+	class expr_c *exp;
+	class location_c *loc;
+	class pars_c *pas;
+	class function_call_c *fc;
+	class literal_c *lt;
+	class callout_args_c *cargs;
+	class callout_arg_c *carg;
+	class assignment_c *assn;
 }
 %start prom
 
-%token CALLOUT STRING
-%token <stringType> ID
+%token CALLOUT 
+%token <stringType> ID STRING
 %token <number> INT_LITERAL
 %token <stringType> CHAR_LITERAL
 %token <stringType> BOOL_LITERAL
@@ -60,7 +70,17 @@
 %type <vsd> var_declarations;
 %type <vd> var_declaration;
 %type <vr_names> var_names;
-
+%type <stats> statements;
+%type <stat> statement;
+%type <exp> expr;
+%type <loc> location;
+%type <pas> pars;
+%type <fc> function_call;
+%type <lt> literal;
+%type <cargs> callout_args;
+%type <carg> callout_arg;
+%type <assn> assignment;
+	
 %left EQQ NQQ
 %left AND OR
 %left LT GT LE GE
@@ -104,9 +124,9 @@ args               : CL OL { $$ =  new args_c();}
 arg                : COMMA TYPE ID { $$ = new arg_c($2,$3); }
 					| COMMA TYPE ID arg { $4->push_back($2,$3); $$ = $4;};
 
-block              : CB var_declarations statements OB 
-				   | CB statements OB 
-				   | CB var_declarations OB { $$ = new block_c($2);}
+block              : CB var_declarations statements OB {$$ = new block_c($2,$3);}
+				   | CB statements OB {$$ = new block_c(NULL,$2);} 
+				   | CB var_declarations OB { $$ = new block_c($2,NULL);}
 				   | CB OB { $$ = new block_c();}
 
 var_declarations   : var_declaration SC { $$ = new vars_d_c($1);}
@@ -118,61 +138,64 @@ var_declaration    : TYPE ID { $$ = new var_d_c($1,$2);}
 var_names          : COMMA ID { $$ = new var_names_c(); $$->push_back($2);}
 					| COMMA ID var_names { $3->push_back($2); $$ = $3;};
 
-statements         : statement | statements statement;
+statements         : statement { $$ = new statements_c(); $$->push_back($1);}
+					| statements statement {$1->push_back($2);$$=$1; };
 
-statement: assignment
-		 | function_call SC
-		 | IF CL expr OL block
-		 | IF CL expr OL block ELSE block  
-		 | { printf("For loop starting\n");} FOR identifier EQ expr COMMA expr block 
-		 | RETURN SC 
-		 | RETURN expr SC 
-		 | BREAK SC 
-		 | CONTINUE SC 
-		 | block;
+statement: assignment { $$ = new statement_c($1); }
+		 | function_call SC { $$ = new statement_c($1);}
+		 | IF CL expr OL block { $$ = new statement_c($3,$5);}
+		 | IF CL expr OL block ELSE block { $$ = new statement_c($3,$5,$7);}
+		 | FOR ID EQ expr COMMA expr block {$$ = new statement_c($2,$4,$6,$7);}
+		 | RETURN SC {$$ = new statement_c("RETURN");}
+		 | RETURN expr SC { $$ = new statement_c("RETURN",$2);}
+		 | BREAK SC {$$ = new statement_c("BREAK");}
+		 | CONTINUE SC {$$ = new statement_c("CONTINUE");}
+		 | block {$$ = new statement_c($1);}; 
 
-assignment: location EQ {printf("EQUALS \n");} expr SC  
-		  | location PLUSONE expr SC 
-	      | location SUBONE expr SC;
+assignment: location EQ expr SC { $$ = new assignment_c($1,$2,$3);}
+		  | location PLUSONE expr SC { $$ = new assignment_c($1,$2,$3);}
+	      | location SUBONE expr SC { $$ = new assignment_c($1,$2,$3);};
 
 
-function_call: ID CL pars OL
-			 | CALLOUT CL STRING callout_args OL;
+function_call: ID CL pars OL { $$ = new function_call_c($1,$3);}
+			 | CALLOUT CL STRING callout_args OL{$$ = new function_call_c("CALLOUT",$3,$4);};
 
-pars         : expr 
-			 | pars COMMA expr;
+pars         : expr {$$ = new pars_c(); $$->push_back($1);}
+			 | pars COMMA expr {$1->push_back($3); $$ = $1;};
 
-identifier   : ID {printf("location:%s\n ",$1);}
 
-location : ID {printf("location:%s\n ",$1);}
-		 | ID CS expr OS;
+location : ID {$$ = new location_c($1);}
+		 | ID CS expr OS {$$ = new location_c($1,$3);};
 
-callout_args: | callout_args COMMA callout_arg;
+callout_args: {$$ = new callout_args_c();}
+           | callout_args COMMA callout_arg { $1->push_back($3); $$ = $1;};
 
-callout_arg: expr 
-		   | STRING;
+callout_arg: expr {$$ = new callout_arg_c($1);}
+		   | STRING {$$ = new callout_arg_c($1);};
 
-expr : CL expr OL 
-	 |  location 
-	 |  literal
-	 |  expr SUB expr
-	 |  expr OR expr
-	 |  expr AND expr 
-	 |  expr NQQ expr
-	 |  expr EQQ expr
-	 |  expr GE expr
-	 |  expr LE expr
-	 |  expr GT expr
-	 |  expr LT expr
-	 |  expr MOD expr
-	 |  NOT expr
-	 |  expr DIV expr 
-	 |  expr MUL expr
-	 |  expr ADD expr
-	 |  SUB {printf("sub expression \n");} expr 
+expr : CL expr OL {$$ = new expr_c($2);}
+	 |  location {$$ = new expr_c($1);}
+	 |  literal {$$ = new expr_c($1);}
+	 |  expr SUB expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr OR expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr AND expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr NQQ expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr EQQ expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr GE expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr LE expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr GT expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr LT expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr MOD expr {$$ = new expr_c($1,$2,$3);}
+	 |  NOT expr  {$$ = new expr_c($1,$2);}
+	 |  expr DIV expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr MUL expr {$$ = new expr_c($1,$2,$3);}
+	 |  expr ADD expr {$$ = new expr_c($1,$2,$3);}
+	 |  SUB expr {$$ = new expr_c($1,$2);} 
 	 ;
 
-literal : INT_LITERAL {printf("int literal \n");} | CHAR_LITERAL | BOOL_LITERAL;
+literal : INT_LITERAL { $$ = new literal_c($1);}
+		| CHAR_LITERAL { $$ = new literal_c($1);}
+		| BOOL_LITERAL { $$ = new literal_c($1);};
 
 
 

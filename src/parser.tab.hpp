@@ -46,8 +46,8 @@ extern int yydebug;
   enum yytokentype
   {
     CALLOUT = 258,
-    STRING = 259,
-    ID = 260,
+    ID = 259,
+    STRING = 260,
     INT_LITERAL = 261,
     CHAR_LITERAL = 262,
     BOOL_LITERAL = 263,
@@ -111,8 +111,18 @@ union YYSTYPE
 	class vars_d_c *vsd;
 	class var_d_c *vd;
 	class var_names_c *vr_names;
+	class statements_c *stats;
+	class statement_c *stat;
+	class expr_c *exp;
+	class location_c *loc;
+	class pars_c *pas;
+	class function_call_c *fc;
+	class literal_c *lt;
+	class callout_args_c *cargs;
+	class callout_arg_c *carg;
+	class assignment_c *assn;
 
-#line 116 "parser.tab.hpp" /* yacc.c:1909  */
+#line 126 "parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

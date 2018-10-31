@@ -1020,7 +1020,7 @@ case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
 #line 59 "scanner.l"
-{ return STRING; }
+{ yylval.stringType = strdup(yytext); return STRING; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP

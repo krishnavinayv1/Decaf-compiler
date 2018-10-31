@@ -9,13 +9,13 @@ field_c::field_c(string Type, class vars_c *variables) {
     this->var_list = variables->getVarsList();
 }
 var_c::var_c(string name, int array_size) {
-    this->declType = variableType::Array;
+    this->declType = 1;
     this->name = name;
     this->length = array_size;
 }
 
 var_c::var_c(string name) {
-    this->declType = variableType::Normal;
+    this->declType = 2;
     this->name = name;
 }
 string var_c::getName() {
@@ -70,4 +70,13 @@ void args_c::push_back(class arg_c *tie) {
 }
 void meths_c::push_back(class meth_c *tie) {
 	method_list.push_back(tie);
+}
+void callout_args_c::push_back(class callout_arg_c *tie) {
+	callout_arg_list.push_back(tie);
+}
+void pars_c::push_back(class expr_c *tie) {
+	call_expr_list.push_back(tie);
+}
+void statements_c::push_back(class statement_c *tie) {
+	stats_list.push_back(tie);
 }
