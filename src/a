@@ -2,17 +2,20 @@ class Program
 {
     int a,b,c,d[100];
     boolean rt;
-    int a[100];
-    boolean er[100],c,d[100];
-    int main(int y,int rt)
+    int d2[10];
+    boolean er[100],c1,d1[100];
+    int main()
     {
-        int a;
-        int c,d,e;
-        boolean er;
+        int rt1;
         a=23;
-        if(a+2)
+        if(!TRUE)
         {
-            rt = 45;
+            rt1 = 34;
         }
+    }
+    int yu(int y)
+    {
+        int rt1;
+       rt1=34;
     }
 }

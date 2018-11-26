@@ -1,0 +1,64 @@
+; ModuleID = 'Decaf compiler'
+source_filename = "Decaf compiler"
+
+@0 = private unnamed_addr constant [48 x i8] c"Given number which is %d is a composite number\0A\00"
+@1 = private unnamed_addr constant [44 x i8] c"Given number which is %d is a prime number\0A\00"
+
+define void @main() {
+entry:
+  %i1 = alloca i32
+  %n = alloca i32
+  %y = alloca i32
+  %i = alloca i32
+  %flag = alloca i32
+  store i32 0, i32* %flag
+  store i32 0, i32* %i
+  store i32 0, i32* %y
+  store i32 0, i32* %n
+  %0 = load i32, i32* %n
+  store i32 91, i32* %n
+  %1 = load i32, i32* %n
+  %divtmp = sdiv i32 %1, 2
+  %2 = load i32, i32* %y
+  store i32 %divtmp, i32* %y
+  store i32 2, i32* %i1
+  br label %loop
+
+loop:                                             ; preds = %ifcont, %entry
+  %i2 = phi i32 [ 2, %entry ], [ %NextVal, %ifcont ]
+  %3 = load i32, i32* %y
+  %4 = load i32, i32* %n
+  %5 = load i32, i32* %i1
+  %modtmp = srem i32 %4, %5
+  %equalcomparetmp = icmp eq i32 %modtmp, 0
+  br i1 %equalcomparetmp, label %if, label %ifcont
+
+afterloop:                                        ; preds = %ifcont, %if
+  %6 = load i32, i32* %flag
+  %equalcomparetmp4 = icmp eq i32 %6, 0
+  br i1 %equalcomparetmp4, label %if5, label %ifcont6
+
+if:                                               ; preds = %loop
+  %7 = load i32, i32* %n
+  %8 = call i32 @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @0, i32 0, i32 0), i32 %7)
+  %9 = load i32, i32* %flag
+  store i32 1, i32* %flag
+  br label %afterloop
+
+ifcont:                                           ; preds = %loop
+  %i3 = load i32, i32* %i1
+  %NextVal = add i32 %i3, 1
+  store i32 %NextVal, i32* %i1
+  %loopcondition = icmp slt i32 %NextVal, %3
+  br i1 %loopcondition, label %loop, label %afterloop
+
+if5:                                              ; preds = %afterloop
+  %10 = load i32, i32* %n
+  %11 = call i32 @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @1, i32 0, i32 0), i32 %10)
+  br label %ifcont6
+
+ifcont6:                                          ; preds = %if5, %afterloop
+  ret void
+}
+
+declare i32 @printf(i8*, i32)

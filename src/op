@@ -1,0 +1,28 @@
+class Program
+{
+    int a,b[100];
+    boolean c[1000],d[100],e;
+    void main()
+    {
+        int y,i,u;
+        a=546+20;
+        if(a == 546)
+        {
+            b[1]=345;
+        }
+        else
+        {
+            b[4]=567;
+        }
+        for i=0,100
+        {
+            i+=1;
+        }
+        callout("printf","%d",i);
+        c[2] = TRUE;
+    }
+    void rt()
+    {
+        int y;
+    }
+}

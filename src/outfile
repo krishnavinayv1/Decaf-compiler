@@ -1,0 +1,29 @@
+; ModuleID = 'Decaf compiler'
+source_filename = "Decaf compiler"
+
+@a = global i32 0
+@b = global [100 x i32] zeroinitializer
+@c = global [1000 x i1] zeroinitializer
+@d = global [100 x i1] zeroinitializer
+@e = global i1 false
+
+define void @main() {
+entry:
+  %u = alloca i32
+  %y = alloca i32
+  store i32 0, i32* %y
+  store i32 0, i32* %u
+  %0 = load i32, i32* @a
+  store i32 546, i32* @a
+  %1 = load i1, i1* getelementptr inbounds ([1000 x i1], [1000 x i1]* @c, i32 0, i32 2)
+  store i1 true, i1* getelementptr inbounds ([1000 x i1], [1000 x i1]* @c, i32 0, i32 2)
+  ret void
+}
+
+define void @rt() {
+entry:
+  %y = alloca i32
+  store i32 0, i32* %y
+  ret void
+}
+
