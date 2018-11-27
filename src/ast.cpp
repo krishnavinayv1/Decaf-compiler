@@ -122,6 +122,7 @@ args_c::args_c(string a,string b)
 }
 void args_c::add_to_map()
 {
+  cout<<"args_c::Adding to map "<<endl;
   if(v.size()==0)
 		return;
 	pair<int,int>temp;
@@ -133,6 +134,7 @@ void args_c::add_to_map()
 			cout<<"Already initiaized variable. Reinitialized could not be done "<<v[i].second<<endl;
 			//exit(0);
 		}
+    cout<<v[i].first<<" "<<v[i].second<<endl;
 		temp.second=0;
     if(v[i].first=="int")
     temp.first = 1;
@@ -144,7 +146,8 @@ void args_c::add_to_map()
 }
 void args_c::push_back(class arg_c *tie) {
 	for(int i=0;i<tie->v.size();i++)
-	v.push_back(tie->v[i]);
+	v.push_back(tie->v[tie->v.size()-i-1]);
+  this->add_to_map();
 }
 void meths_c::push_back(class meth_c *tie) {
 	method_list.push_back(tie);
@@ -171,6 +174,7 @@ void meth_c::remove_from_map()
     return;
     for(int i=0;i<arguments->v.size();i++)
     {
+      cout<<"meth_c::"<<arguments->v[i].second<<endl;
         if(mp[arguments->v[i].second]==true)
         {
           mp[arguments->v[i].second]=false;
@@ -293,7 +297,8 @@ bool block_c::has_continue()
 }
 bool statements_c::has_return() {
     for (int i = 0; i < stats_list.size(); i++) {
-        if (stats_list[i]->type==7 or stats_list[i]->type==6){
+      //  cout<<"statement "<<stats_list[i]->type<<endl;
+        if (stats_list[i]->has_return()){
             return true;
         }
     }
@@ -303,7 +308,7 @@ bool statements_c::has_return() {
 
 bool statements_c::has_continue() {
     for (int i = 0; i < stats_list.size(); i++) {
-        if (stats_list[i]->type==9) {
+        if (stats_list[i]->has_continue()) {
             return true;
         }
     }
@@ -312,13 +317,69 @@ bool statements_c::has_continue() {
 
 bool statements_c::has_break() {
     for (int i = 0; i < stats_list.size(); i++) {
-        if (stats_list[i]->type==8) {
+        if (stats_list[i]->has_break()) {
             return true;
         }
     }
     return false;
 }
-
+bool statement_c::has_return()
+{
+    if(type==6 or type==7)
+    return true;
+    if(type==3)
+    {
+      if(!b_second)
+      return b_first->has_return();
+      else
+      return b_second->has_return()|b_first->has_return();
+    }
+    if(type==10)
+    {
+      return b_first->has_return();
+    }
+    if(type==4)
+    return b_first->has_return();
+    return false;
+}
+bool statement_c::has_break()
+{
+  if(type==8)
+  return true;
+  if(type==3)
+  {
+    if(!b_second)
+    return b_first->has_break();
+    else
+    return b_second->has_break()|b_first->has_break();
+  }
+  if(type==10)
+  {
+    return b_first->has_break();
+  }
+  if(type==4)
+  return b_first->has_break();
+  return false;
+}
+bool statement_c::has_continue()
+{
+  if(type==9)
+  return true;
+  if(type==3)
+  {
+    if(!b_second)
+    return b_first->has_continue();
+    else
+    return b_second->has_continue()|b_first->has_continue();
+  }
+  if(type==10)
+  {
+    return b_first->has_continue();
+  }
+  if(type==4)
+  return b_first->has_continue();
+  return false;
+}
 // -------------- LLVM code started ---------------------//
 
 Constructs::Constructs() {
@@ -505,10 +566,11 @@ Function* meth_c::generateCode(Constructs *compilerConstructs)
     if (RetVal) {
     //  cout<<"Entered"<<RetVal<<endl;
         /* make this the return value */
-        if (Type1 != "void")
-            compilerConstructs->Builder->CreateRet(RetVal);
-        else
-            compilerConstructs->Builder->CreateRetVoid();
+        if (Type1 == "void")
+        compilerConstructs->Builder->CreateRetVoid();
+        // compilerConstructs->Builder->CreateRet(RetVal);
+        // else
+
         /// Iterate through each basic block in this function and remove any dead code
         // for (auto &basicBlock : *F) {
         //     BasicBlock *block = &basicBlock;
@@ -622,7 +684,7 @@ Value *statement_c::generateCode(Constructs* compilerConstructs)
     if (if_val == nullptr) {
         return nullptr;
     }
-
+    cout<<ret_if<<" "<<break_if<<" "<<continue_if<<endl;
     /// Create a break for next part of the code after else block
 
     if (!ret_if && !break_if && !continue_if) {
@@ -643,6 +705,7 @@ Value *statement_c::generateCode(Constructs* compilerConstructs)
             return nullptr;
         }
         ret_else = b_second->has_return();
+        cout<<"Else block "<<ret_else<<endl;
         if (!ret_else)
             compilerConstructs->Builder->CreateBr(nextBlock);
     }

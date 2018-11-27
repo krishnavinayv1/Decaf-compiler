@@ -235,6 +235,7 @@ public:
 		this->total_vars = rt;
 		this->total_st = rt1;
 		remove_from_map(rt);
+    cout<<"block ret "<<this->has_return()<<" brk "<<this->has_break()<<" cnt "<<this->has_continue()<<endl;
     cout<<"BLOCK initiaized done\n";
 	}
 	bool has_break();
@@ -343,6 +344,9 @@ public:
 		this->b_first = a;
 		this->type = 10;
 	}
+  bool has_return();
+  bool has_break();
+  bool has_continue();
 	bool check_return_bool(class expr_c *e);
 	virtual Value *generateCode(Constructs *compilerConstructs);
 	virtual int accept(visitor *v){v->visit(this);}
@@ -469,7 +473,7 @@ public:
 	{
 		if(mp[a]==false)
 		{
-			cout<<"Undeclared variable using "<<a<<endl;
+			cout<<"Location::Undeclared variable using "<<a<<endl;
 			//exit(0);
 		}
 		this->a = a;
@@ -485,7 +489,7 @@ public:
 
 		if(mp[a]==false)
 		{
-			cout<<"Undeclared variable using "<<a<<endl;
+			cout<<"Location::Undeclared variable using "<<a<<endl;
 			//exit(0);
 		}
 		this->a = a;
@@ -664,7 +668,10 @@ class dfs: public visitor
 		if(v->total_vars)
 			v->total_vars->accept(this);
 		if(v->total_st)
+    {
+      cout<<"RETURN STATUS"<<v->has_return()<<endl;
 			v->total_st->accept(this);
+    }
 	}
 	virtual int visit(vars_d_c *v)
 	{
@@ -696,16 +703,12 @@ class dfs: public visitor
 		}
 		if(val->type==3)
 		{
-			cout<<"IF"<<endl;
+			cout<<"IF or IF ELSE"<<endl;
 			val->e_first->accept(this);
+      if(val->b_first!=NULL)
 			val->b_first->accept(this);
-		}
-		if(val->type==4)
-		{
-			cout<<"IF ELSE"<<endl;
-			val->e_first->accept(this);
-			val->b_first->accept(this);
-			val->b_second->accept(this);
+      if(val->b_second!=NULL)
+      val->b_second->accept(this);
 		}
 		if(val->type==5)
 		{
@@ -715,6 +718,15 @@ class dfs: public visitor
 			val->e_second->accept(this);
 			val->b_first->accept(this);
 		}
+    if(val->type==6)
+    {
+      cout<<"RETURN SC";
+    }
+    if(val->type==7)
+    {
+      cout<<"RETURN EXPR";
+      val->e_first->accept(this);
+    }
 	};
 	virtual int visit(expr_c* val)
 	{
@@ -742,6 +754,10 @@ class dfs: public visitor
 		{
 			val->lit->accept(this);
 		}
+    else if(val->type==10)
+    {
+      val->ff->accept(this);
+    }
 		else
 		{
 			val->first->accept(this);

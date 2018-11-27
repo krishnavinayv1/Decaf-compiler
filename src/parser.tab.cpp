@@ -2145,7 +2145,7 @@ main(int argc, char **argv)
 	yyparse();
 	cout<<"Parsing done"<<endl;
 	dfs* df = new dfs();
-	//start->accept(df);
+	start->accept(df);
 	if(start)
 	{
 		start->generateCode();

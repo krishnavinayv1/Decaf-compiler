@@ -1,21 +1,9 @@
 class Program
 {
-    int a,b,c,d[100];
-    boolean rt;
-    int d2[10];
-    boolean er[100],c1,d1[100];
-    int main()
+    int a,b;
+    void main()
     {
-        int rt1;
-        a=23;
-        if(!TRUE)
-        {
-            rt1 = 34;
-        }
-    }
-    int yu(int y)
-    {
-        int rt1;
-       rt1=34;
+        boolean a;
+        a=TRUE;
     }
 }
