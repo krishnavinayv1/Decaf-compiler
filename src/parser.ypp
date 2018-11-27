@@ -143,11 +143,11 @@ statements         : statement { $$ = new statements_c(); $$->push_back($1);}
 
 statement: assignment { $$ = new statement_c($1); }
 		 | function_call SC { $$ = new statement_c($1);}
-		 | IF CL expr OL block { $$ = new statement_c($3,$5,NULL);}
+		 | IF CL expr OL block { cout<<"if started"<<endl;$$ = new statement_c($3,$5,NULL);cout<<"if ended\n";}
 		 | IF CL expr OL block ELSE block { $$ = new statement_c($3,$5,$7);}
 		 | FOR ID EQ expr COMMA expr block {$$ = new statement_c($2,$4,$6,$7);}
-		 | RETURN SC {$$ = new statement_c("RETURN");}
-		 | RETURN expr SC { $$ = new statement_c("RETURN",$2);}
+		 | RETURN SC {cout<<"RETURN SC\n";$$ = new statement_c("RETURN");}
+		 | RETURN expr SC {cout<<"RETURN EXPR SC\n"; $$ = new statement_c("RETURN",$2);}
 		 | BREAK SC {$$ = new statement_c("BREAK");}
 		 | CONTINUE SC {$$ = new statement_c("CONTINUE");}
 		 | block {$$ = new statement_c($1);};
@@ -176,6 +176,7 @@ callout_arg: expr {$$ = new callout_arg_c($1);}
 
 expr : CL expr OL {$$ = new expr_c($2);}
 	 |  location {$$ = new expr_c($1);}
+	 |  function_call {$$ = new expr_c($1);}
 	 |  literal {$$ = new expr_c($1);}
 	 |  expr SUB expr {$$ = new expr_c($1,$2,$3);}
 	 |  expr OR expr {$$ = new expr_c($1,$2,$3);}
@@ -212,7 +213,7 @@ main(int argc, char **argv)
 	//printf("Parsing started\n");
 	yyin = fopen(argv[1], "r");
 	yyparse();
-
+	cout<<"Parsing done"<<endl;
 	dfs* df = new dfs();
 	//start->accept(df);
 	if(start)

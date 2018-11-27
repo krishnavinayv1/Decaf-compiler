@@ -31,7 +31,7 @@ field_c::field_c(string Type, class vars_c *variables) {
     	if(mp[this->var_list[i]->name]==true)
     	{
     		cout<<"Already initiaized variable. Reinitialized could not be done "<<this->var_list[i]->name<<endl;
-    		exit(0);
+    		//exit(0);
     	}
     	mp[this->var_list[i]->name]=true;
     	if(this->var_list[i]->declType==1)
@@ -62,7 +62,7 @@ var_c::var_c(string name, int array_size) {
     if(array_size<=0)
     {
     	cout<<"Array_size could not be less than or equal to 0"<<endl;
-    	exit(0);
+    	//exit(0);
     }
     this->length = array_size;
 }
@@ -118,6 +118,29 @@ args_c::args_c(string a,string b)
 	ty.first = a;
 	ty.second = b;
 	this->v.push_back(ty);
+  this->add_to_map();
+}
+void args_c::add_to_map()
+{
+  if(v.size()==0)
+		return;
+	pair<int,int>temp;
+
+	for(int i=0;i<v.size();i++)
+	{
+		if(mp[v[i].second]==true)
+		{
+			cout<<"Already initiaized variable. Reinitialized could not be done "<<v[i].second<<endl;
+			//exit(0);
+		}
+		temp.second=0;
+    if(v[i].first=="int")
+    temp.first = 1;
+    else
+    temp.first=2;
+		mp[v[i].second]=true;
+		tp[v[i].second]=temp;
+	}
 }
 void args_c::push_back(class arg_c *tie) {
 	for(int i=0;i<tie->v.size();i++)
@@ -141,6 +164,21 @@ bool statement_c::check_return_bool(class expr_c *t)
 		return true;
 	return false;
 }
+void meth_c::remove_from_map()
+{
+  if(arguments!=NULL){
+  if(arguments->v.size()==0)
+    return;
+    for(int i=0;i<arguments->v.size();i++)
+    {
+        if(mp[arguments->v[i].second]==true)
+        {
+          mp[arguments->v[i].second]=false;
+        }
+
+    }
+  }
+};
 string expr_c::get_type(class expr_c *a,class expr_c *c,string b)
 {
 	if(((b=="<" or b=="<=") or (b==">=" or b==">"))
@@ -149,7 +187,7 @@ string expr_c::get_type(class expr_c *a,class expr_c *c,string b)
 		if(a->return_type!="int" or c->return_type!="int")
 		{
 			cout<<"This binary relative or arithmetic operator has operators other than int"<<endl;
-			exit(0);
+			//exit(0);
 		}
 		else
 		{
@@ -169,7 +207,7 @@ string expr_c::get_type(class expr_c *a,class expr_c *c,string b)
 		{
       cout<<a->return_type<<" "<<c->return_type<<endl;
 			cout<<"for the <eq_op> both operands have no same type"<<endl;
-			exit(0);
+			//exit(0);
 		}
 		else
 			return "boolean";
@@ -179,7 +217,7 @@ string expr_c::get_type(class expr_c *a,class expr_c *c,string b)
 		if(a->return_type!="boolean" or c->return_type!="boolean")
 		{
 			cout<<"This binary cond operator has operators other than boolean"<<endl;
-			exit(0);
+			//exit(0);
 		}
 		else
 		return "boolean";
@@ -210,7 +248,7 @@ void vars_d_c::add_to_map(class var_d_c *v)
 		if(mp[v->names[j]]==true)
 		{
 			cout<<"Already initiaized variable. Reinitialized could not be done "<<v->names[j]<<endl;
-			exit(0);
+			//exit(0);
 		}
 		temp.second=0;
 		mp[v->names[j]]=true;
@@ -328,10 +366,22 @@ Value *prog::generateCode()
 	}
 	return v;
 }
+// void prog::generateCodeDump()
+// {
+// 	cerr << "Generating LLVM IR Code\n";
+//     this->compilerConstructs->TheModule->print(llvm::outs(), nullptr);
+// }
+raw_ostream &file_write()
+{
+    FILE *fp=fopen("outfile","w");
+    static raw_fd_ostream S(fileno(fp), true);
+    return S;
+}
 void prog::generateCodeDump()
 {
-	cerr << "Generating LLVM IR Code\n";
-    this->compilerConstructs->TheModule->print(llvm::outs(), nullptr);
+  cerr << "Generating LLVM IR Code\n";
+
+    this->compilerConstructs->TheModule->print(file_write(), nullptr);
 }
 
 Value *fields_c::generateCode(Constructs *compilerConstructs)
@@ -915,6 +965,11 @@ Value *expr_c::generateCode(Constructs* compilerConstructs)
     else if(type==4)
     {
       Value *v = lit->generateCode(compilerConstructs);
+      return v;
+    }
+    else if(type==10)
+    {
+      Value *v = ff->generateCode(compilerConstructs);
       return v;
     }
 }

@@ -199,11 +199,12 @@ public:
 			if(b=="main" and get_size(c)!=0)
 			{
 				cout<<b<<"main should have zero arguments\n";
-				exit(0);
+				//exit(0);
 			}
-
+      this->remove_from_map();
 	}
 	int get_size(class args_c *);
+  void remove_from_map();
 	virtual Function *generateCode(Constructs *compilerConstructs);
 	virtual int accept(visitor *v){v->visit(this);}
 };
@@ -212,6 +213,7 @@ public:
 	args_c(string,string);
 	std::vector<pair<string,string> >v;
 	args_c()=default;
+  void add_to_map();
 	void push_back(class arg_c *);
 	virtual int accept(visitor *v){v->visit(this);}
 };
@@ -229,9 +231,11 @@ public:
 	block_c(){this->total_vars = NULL;}
 	block_c(class vars_d_c *rt,class statements_c *rt1)
 	{
+    cout<<"BLOCK initiaized\n";
 		this->total_vars = rt;
 		this->total_st = rt1;
 		remove_from_map(rt);
+    cout<<"BLOCK initiaized done\n";
 	}
 	bool has_break();
 	bool has_return();
@@ -299,16 +303,17 @@ public:
 	}
 	statement_c(class expr_c *a, class block_c *b,class block_c *c)
 	{
-
-		if(check_return_bool(a)==false)
-		{
-			cout<<"Not a bool Expression for if else statement"<<endl;
-			exit(0);
-		}
+    cout<<"IF ELSE initiaized"<<endl;
+		//if(check_return_bool(a)==false)
+		//{
+		//	cout<<"Not a bool Expression for if else statement"<<endl;
+			//exit(0);
+	//	}
 		this->e_first = a;
 		this->b_first = b;
 		this->b_second = c;
 		this->type = 3;
+    cout<<"IF ELSE done"<<endl;
 	}
 	statement_c(string a,class expr_c *b,class expr_c *c,class block_c *d)
 	{
@@ -327,9 +332,11 @@ public:
 	}
 	statement_c(string a,class expr_c *b)
 	{
+    cout<<"RETURN initiaized\n"<<endl;
 		this->a = a;
 		this->e_first = b;
 		this->type = 7;
+    cout<<"RETURN initiaized done\n"<<endl;
 	}
 	statement_c(class block_c *a)
 	{
@@ -354,7 +361,7 @@ public:
 		if(check_equal_types(a,c)==false)
 		{
 			cout<<"Assignment operator has two different Operands"<<endl;
-			exit(0);
+			//exit(0);
 		}
 		if(b=="=")this->type=1;
 		if(b=="-=")this->type=2;
@@ -373,9 +380,11 @@ public:
 	class callout_args_c *cc = NULL;
 	function_call_c(string a,class pars_c *rt)
 	{
+    cout<<"Function call initiaized\n";
 		this->name = a;
 		this->pp = rt;
 		type = 1;
+    cout<<"Function call initiaized and done\n";
 	}
 	function_call_c(string a,string str,class callout_args_c *rt)
 	{
@@ -461,7 +470,7 @@ public:
 		if(mp[a]==false)
 		{
 			cout<<"Undeclared variable using "<<a<<endl;
-			exit(0);
+			//exit(0);
 		}
 		this->a = a;
 		this->type = 1;
@@ -477,7 +486,7 @@ public:
 		if(mp[a]==false)
 		{
 			cout<<"Undeclared variable using "<<a<<endl;
-			exit(0);
+			//exit(0);
 		}
 		this->a = a;
 		this->er = b;
@@ -485,7 +494,7 @@ public:
 		if(get_type(b)!="int")
 		{
 			cout<<"Array subscript should be int"<<endl;
-			exit(0);
+			//exit(0);
 		}
 		int df = tp[a].first;
 		if(df==3)
@@ -516,13 +525,24 @@ public:
 	class expr_c *second=NULL;
 	class location_c *loc=NULL;
 	class literal_c *lit=NULL;
+  class function_call_c *ff=NULL;
+  expr_c(class function_call_c *a)
+  {
+    cout<<"func_c in EXPR_C called\n";
+    this->type=10;
+    this->ff=a;
+    this->return_type="int";
+    cout<<"func_c in EXPR_C called and done\n";
+  }
 	expr_c(class expr_c *a,string b,class expr_c *c)
 	{
+    cout<<"EXPr-c binary operato initiaized\n";
 		this->first = a;
 		this->second = c;
 		this->operato = b;
 		this->type = 2;
 		this->return_type = get_type(this->first,this->second,b);
+    cout<<"EXPr-c binary operato initiaized and done"<<b<<endl;
 	}
 	expr_c(string b,class expr_c *c)
 	{
@@ -535,7 +555,7 @@ public:
 			if(c->return_type!="boolean")
 			{
 				cout<<"For not expr operand is not bool"<<endl;
-				exit(0);
+				//exit(0);
 			}
 			this->return_type = "boolean";
 		}
